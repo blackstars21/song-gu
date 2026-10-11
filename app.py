@@ -75,3 +75,62 @@ st.title("🎵 Song Gu Tournament")
 st.markdown("Narrow your songs down to your top survivors.")
 
 if st.session_state.phase == 'input':
+    default_songs = "Live My Life - aespa\nWedding Dress - TAEYANG\nDash - NMIXX\nUntouchable - ITZY\nEyes, Nose, Lips - TAEYANG\nSupernova - aespa"
+    song_input = st.text_area("Paste your songs (one per line):", value=default_songs, height=180)
+    
+    # Dynamic target count selector
+    target = st.number_input(
+        "Stop when the pot narrows down to (Target Top N):",
+        min_value=1,
+        max_value=100,
+        value=3,
+        step=1
+    )
+    
+    if st.button("Seal the Pot (Start)", use_container_width=True):
+        start_tournament(song_input, target)
+        st.rerun()
+
+elif st.session_state.phase == 'battle':
+    st.subheader(f"Round {st.session_state.round}")
+    st.caption(f"🎯 Target pool: **≤ {st.session_state.target_count} songs**")
+    
+    if len(st.session_state.current_queue) > 0:
+        current_pair = st.session_state.current_queue[0]
+        
+        if current_pair[1] is None:
+            st.info(f"**{current_pair[0]}** got a bye and advances automatically!")
+            handle_vote('A', current_pair)
+            st.button("Next Match", use_container_width=True)
+        else:
+            st.write("### Which one survives?")
+            
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                if st.button(f"👈 {current_pair[0]}", use_container_width=True):
+                    handle_vote('A', current_pair)
+                    st.rerun()
+            with col2:
+                if st.button("🤝 Both Survive", use_container_width=True):
+                    handle_vote('Both', current_pair)
+                    st.rerun()
+            with col3:
+                if st.button(f"{current_pair[1]} 👉", use_container_width=True):
+                    handle_vote('B', current_pair)
+                    st.rerun()
+            
+            # Progress bar for the current round
+            total_matches = max(1, len(st.session_state.songs) // 2)
+            matches_left = len(st.session_state.current_queue)
+            st.progress((total_matches - matches_left) / total_matches)
+
+elif st.session_state.phase == 'results':
+    st.success("Target reached! The pot has settled.")
+    st.write(f"### Final Survivors ({len(st.session_state.songs)} total):")
+    
+    for i, song in enumerate(st.session_state.songs, 1):
+        st.markdown(f"**{i}. {song}**")
+        
+    if st.button("Start a New Tournament", use_container_width=True):
+        st.session_state.phase = 'input'
+        st.rerun()

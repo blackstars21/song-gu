@@ -74,4 +74,4 @@ def handle_vote(choice, pair):
 st.title("🎵 Song Gu Tournament")
 st.markdown("Narrow your songs down to your top survivors.")
 
-if st.session_state.
+if st.session_state.phase == 'input':

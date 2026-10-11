@@ -75,7 +75,7 @@ st.title("🎵 Song Gu Tournament")
 st.markdown("Narrow your songs down to your top survivors.")
 
 if st.session_state.phase == 'input':
-    default_songs = "Live My Life - aespa\nWedding Dress - TAEYANG\nDash - NMIXX\nUntouchable - ITZY\nEyes, Nose, Lips - TAEYANG\nSupernova - aespa"
+    default_songs = ""
     song_input = st.text_area("Paste your songs (one per line):", value=default_songs, height=180)
     
     # Dynamic target count selector

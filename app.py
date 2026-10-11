@@ -67,7 +67,6 @@ st.title("🎵 Song Gu Tournament")
 st.markdown("Throw your songs into the pot. Only the strongest survive.")
 
 if st.session_state.phase == 'input':
-    default_songs = "Live My Life - aespa\nWedding Dress - TAEYANG\nDash - NMIXX\nUntouchable - ITZY"
     song_input = st.text_area("Paste your songs (one per line):", value=default_songs, height=200)
     
     if st.button("Seal the Pot (Start)", use_container_width=True):

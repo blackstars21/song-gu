@@ -75,7 +75,7 @@ st.title("🎵 Song Gu Tournament")
 st.markdown("Narrow your songs down to your top survivors.")
 
 if st.session_state.phase == 'input':
-    default_songs = ""
+    default_songs = "Live My Life - aespa\nWedding Dress - TAEYANG\nDash - NMIXX\nUntouchable - ITZY\nEyes, Nose, Lips - TAEYANG\nSupernova - aespa"
     song_input = st.text_area("Paste your songs (one per line):", value=default_songs, height=180)
     
     # Dynamic target count selector
@@ -129,4 +129,28 @@ elif st.session_state.phase == 'battle':
             st.divider()
             
             # --- EARLY STOP BUTTON ---
-            if st.button("🛑 Stop Tournament Early & Show Remaining Songs",
+            if st.button("🛑 Stop Tournament Early & Show Remaining Songs", use_container_width=True):
+                # Gather songs that already survived this round
+                remaining_songs = list(st.session_state.next_queue)
+                
+                # Gather songs that are still waiting to battle in the current round
+                for pair in st.session_state.current_queue:
+                    remaining_songs.append(pair[0])
+                    if pair[1] is not None:
+                        remaining_songs.append(pair[1])
+                
+                # Update state to skip straight to results
+                st.session_state.songs = remaining_songs
+                st.session_state.phase = 'results'
+                st.rerun()
+
+elif st.session_state.phase == 'results':
+    st.success("The tournament has ended. The pot has settled.")
+    st.write(f"### Final Survivors ({len(st.session_state.songs)} total):")
+    
+    for i, song in enumerate(st.session_state.songs, 1):
+        st.markdown(f"**{i}. {song}**")
+        
+    if st.button("Start a New Tournament", use_container_width=True):
+        st.session_state.phase = 'input'
+        st.rerun()

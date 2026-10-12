@@ -122,7 +122,7 @@ elif st.session_state.phase == 'battle':
                     st.rerun()
             
             # Progress bar for the current round
-            total_matches = max(1, len(st.session_state.songs) // 2)
+            total_matches = max(1, (len(st.session_state.songs) + 1) // 2)
             matches_left = len(st.session_state.current_queue)
             st.progress((total_matches - matches_left) / total_matches)
             

@@ -92,6 +92,8 @@ if st.session_state.phase == 'input':
         st.rerun()
 
 elif st.session_state.phase == 'battle':
+    # Live tracker header
+    songs_remaining = len(st.session_state.current_queue) * 2 + len(st.session_state.next_queue)
     st.subheader(f"Round {st.session_state.round}")
     st.caption(f"🎯 Target pool: **≤ {st.session_state.target_count} songs**")
     
@@ -123,14 +125,8 @@ elif st.session_state.phase == 'battle':
             total_matches = max(1, len(st.session_state.songs) // 2)
             matches_left = len(st.session_state.current_queue)
             st.progress((total_matches - matches_left) / total_matches)
-
-elif st.session_state.phase == 'results':
-    st.success("Target reached! The pot has settled.")
-    st.write(f"### Final Survivors ({len(st.session_state.songs)} total):")
-    
-    for i, song in enumerate(st.session_state.songs, 1):
-        st.markdown(f"**{i}. {song}**")
-        
-    if st.button("Start a New Tournament", use_container_width=True):
-        st.session_state.phase = 'input'
-        st.rerun()
+            
+            st.divider()
+            
+            # --- EARLY STOP BUTTON ---
+            if st.button("🛑 Stop Tournament Early & Show Remaining Songs",
